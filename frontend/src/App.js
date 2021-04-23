@@ -1,5 +1,5 @@
 import React from 'react'
-import Homepage from './Homepage'
+import Calendar from './Calendar'
 
 import {
   BrowserRouter as Router,
@@ -14,7 +14,7 @@ import {
 const App = () => {
   return (
     <>
-      <Homepage/>
+      <Calendar/>
     </>
   )
 }

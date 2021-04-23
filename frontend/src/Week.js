@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from 'react'
+import moment from 'moment'
+import AppointmentButton from './smallComponents/AppointmentButton'
 
 const Week = (props) => {
   const {day} = props
+  const time = moment().startOf('day')
 
-  const boxedHours = (time) => {
-    return (
-      <>
-        <div className='columns has-background-primary-light' id = {time}>
-          <div className='box p-0'>
-           3
-          </div>
-        </div>
-      </>
-    )
-  }
+  const hours =  [...Array(24).keys()]
 
-  const times = [...Array(24).keys()]
-
-  return (
+  return(
     <>
-      <div className='column'>
-        <div className='columns'>
-          <h1 className='title'> {day} </h1>
-        </div>
+      <div className='column'>              
+        <h1 className='is-size-4'> {moment(time).add(day, 'd').format('dddd MM DD')} </h1>
+    
         {
-          times.map(time => {
-            return boxedHours(time)
+          hours.map(hour => {
+            return(
+              <AppointmentButton time = {time} day = {day} hour = {hour} />
+            )
           })
         }
       </div>
