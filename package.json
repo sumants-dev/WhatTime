@@ -5,8 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "parcel watch frontend/index.html",
-    "server": "node backend/server.js",
-    "dev": "concurrently --kill-others \"npm run build\" \"npm run server\""
+    "server": "nodemon backend/server.js",
+    "dev": "concurrently --kill-others \"npm run build\" \"npm run server\"",
+    "test-server": "nodemon backend/server.js"
   },
   "keywords": [],
   "author": "Sumant Shringari",
@@ -22,14 +23,18 @@
     "connect-ensure-login": "^0.1.1",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
+    "dotenv": "^5.0.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "mo": "^1.7.3",
     "moment": "^2.29.1",
     "mongoose": "^5.12.3",
+    "nodemon": "^2.0.7",
     "parcel-bundler": "^1.12.3",
     "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local-mongoose": "^6.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.1",
@@ -39,7 +44,8 @@
     "reactjs-popup": "^2.0.4",
     "redux": "^4.0.5",
     "sig": "^1.0.0",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.3",
+    "underscore": "^1.13.1"
   },
   "devDependencies": {
     "eslint-plugin-import": "^2.21.2",

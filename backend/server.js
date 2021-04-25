@@ -1,17 +1,23 @@
 // Imports
 const express = require('express')
 const mongoose = require('mongoose')
-const session = require('express-session')
-const passport = require('passport')
+const keys = require('./config/keys')
 const path = require('path')
 const bodyParser = require('body-parser')
-const connectEnsureLogin = require('connect-ensure-login')
+const cookieSession = require('cookie-session')
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth20')
 
-
-
-const accountRouter = require('./routes/account')
-
+//models
 const User = require('./models/user')
+
+//Middleware
+const isAuthenticated = require('./middleware/isUserAuthenticated')
+// Routers
+const calendarRouter = require('./routes/calendar')
+const passportAccountRouter = require('./routes/passportAccount')
+const userRouter = require('./routes/user')
+
 // Initialization variables
 const MONGO_URI = 'mongodb://localhost:27017/when2meet'
 const port = process.env.PORT || 3000
@@ -24,29 +30,55 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true,
 })
 
-app.use(session({
-  secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+app.use(cookieSession({
+  // milliseconds of a day
+  maxAge: 24*60*60*1000,
+  keys:[keys.session.cookieKey]
 }))
+
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+passport.use(
+  new GoogleStrategy({
+      clientID: keys.google.clientID,
+      clientSecret: keys.google.clientSecret,
+      callbackURL: '/auth/google/redirect'
+  }, (accessToken, refreshToken, profile, done) => {
+      User.findOne({googleId: profile.id}).then((currentUser) => {
+        console.log(profile)
+        console.log(accessToken)
+        if(currentUser){
+          done(null, currentUser);
+        } else{
+          User.create({ username: profile.displayName, googleId: profile.id, accessToken: accessToken }).then((username) => {
+            done(null, username)
+          })
+        } 
+      })
+    })
+)
+
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then(user => {
+    done(null, user)
+  })
+})
+
+
 // INTEGRATION
 app.use(express.static('dist'))
 app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }));
 
-
-// Set Up Passport
-app.use(passport.initialize())
-app.use(passport.session())
-passport.use(User.createStrategy())
-
-// To use with sessions
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
-
-// Routers
-app.use('/account', accountRouter)
+// ROUTER
+app.use('/calendar', calendarRouter)
+app.use('/user', userRouter)
+app.use('/', passportAccountRouter)
 
 // INTEGRATION
 app.get('/favicon.ico', (req, res) => {
