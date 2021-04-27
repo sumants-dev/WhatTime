@@ -39,7 +39,7 @@ app.use(cookieSession({
 
 app.use(passport.initialize())
 app.use(passport.session())
-
+// callbackURL: '/auth/google/redirect'
 passport.use(
   new GoogleStrategy({
       clientID: keys.google.clientID,
@@ -47,12 +47,15 @@ passport.use(
       callbackURL: '/auth/google/redirect'
   }, (accessToken, refreshToken, profile, done) => {
       User.findOne({googleId: profile.id}).then((currentUser) => {
-        console.log(profile)
-        console.log(accessToken)
         if(currentUser){
           done(null, currentUser);
         } else{
-          User.create({ username: profile.displayName, googleId: profile.id, accessToken: accessToken }).then((username) => {
+
+          const options = { upsert: true, new: true, setDefaultsOnInsert: true }
+
+          User.findOneAndUpdate(
+            {username: profile._json.email}, {username: profile._json.email, googleId: profile.id, accessToken: accessToken },
+            options).then((username) => {
             done(null, username)
           })
         } 

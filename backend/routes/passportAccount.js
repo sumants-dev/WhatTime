@@ -16,7 +16,9 @@ passport.authenticate('google', {
 
 )
 
-router.get('/auth/google/redirect', passport.authenticate('google'))
+router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+  res.redirect('/')
+})
 
 router.get('/secret', isUserAuthenticated, (req, res) => {
     res.send('You have reached the secret route');
@@ -24,7 +26,7 @@ router.get('/secret', isUserAuthenticated, (req, res) => {
 
 router.get('/logout', (req, res) => {
     req.logout(); 
-    res.redirect('/');
+    res.redirect('/login');
 })
 
 module.exports = router

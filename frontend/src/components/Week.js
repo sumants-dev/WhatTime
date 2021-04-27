@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
-import AvalibilityStaticButton from './smallComponents/AvalibilityStaticButton'
+import AppointmentButton from './smallComponents/AppointmentButton'
 
-const WeeklyAvalibility = (props) => {
-  const {time, day, calendar} = props
-
-
+const Week = (props) => {
+  const {time, day} = props
   const hours =  [...Array(24).keys()]
-
+  
   return(
     <>
       <div className='column is-narrow-mobile'>              
@@ -17,7 +15,7 @@ const WeeklyAvalibility = (props) => {
           hours.map(hour => {
             if(hour >= 7 && hour <= 21) {
               return(
-                <AvalibilityStaticButton time = {time} day = {day} hour = {hour} calendar = {calendar} />
+                <AppointmentButton time = {time} day = {day} hour = {hour} />
             )}
             else {
               return(
@@ -34,4 +32,4 @@ const WeeklyAvalibility = (props) => {
 
 }
 
-export default WeeklyAvalibility
+export default Week

@@ -21,9 +21,24 @@ const setCalendarAvalibility = async (calendar) => {
     await Calendar.findOneAndUpdate({calendar}, {calendarAvalibility})
 }
 
+router.get('/isAuthenticated', (req, res, next) => {
+  return (req.user !== null)
+})
+
+router.post('/activeCalendar', isUserAuthenticated, (req, res, next) => {
+  const { calendar } = req.body
+  req.session.activeCalendar = calendar
+  res.send('OK')
+})
+
+router.get('/activeCalendar', isUserAuthenticated, async(req, res, next) => {
+  res.send({calendar: req.session.activeCalendar})
+})
+
 router.post('/avalibility/delete', isUserAuthenticated, async(req, res, next) => {
   try {
-    const { calendar, time } = req.body
+    const { time } = req.body
+    const calendar = req.session.activeCalendar
     const user = req.user.username
     
     const query = await Avalibility.findOne({ user, calendar })
@@ -49,10 +64,8 @@ router.post('/avalibility/delete', isUserAuthenticated, async(req, res, next) =>
 
 router.post('/avalibility/add', isUserAuthenticated, async(req, res, next) => {
   try {
-    const { calendar, time } = req.body
-    console.log(calendar)
-
-
+    const { time } = req.body
+    const calendar = req.session.activeCalendar
     const user = req.user.username
     
     const query = await Avalibility.find({ user, calendar })
@@ -75,22 +88,22 @@ router.post('/avalibility/add', isUserAuthenticated, async(req, res, next) => {
 
     res.send("OK")
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     res.send("Not OK")
   }
 })
 
 
 
-router.post('/avalibility', isUserAuthenticated, async(req, res, next) => {
+router.get('/avalibility', isUserAuthenticated, async(req, res, next) => {
   try {
-    const { calendar } = req.body
+    const calendar = req.session.activeCalendar
     const user = req.user.username
-    console.log(user)
-    console.log(calendar)
+    // console.log(user)
+    // console.log(calendar)
     
     const query = await Avalibility.find({ user, calendar })
-    console.log(query)
+    // console.log(query)
     res.send(query)
 
   } catch (error) {
@@ -99,11 +112,13 @@ router.post('/avalibility', isUserAuthenticated, async(req, res, next) => {
 })
 
 
-router.post('/calendars', isUserAuthenticated, async(req, res, next) => {
+router.get('/calendars', isUserAuthenticated, async(req, res, next) => {
   try {
     const user = req.user.username
-    const calendars = await User.find({ user })
-    
+    console.log(user)
+    let data = await User.findOne({ username: user })
+    console.log(data)
+    const calendars = data.calendars
     res.send(calendars)
   } catch (error) {
     res.send("Not OK")    

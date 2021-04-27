@@ -3,8 +3,8 @@ const { Schema, model } = mongoose
 
 const userSchema = new Schema({
   username:  { type: String, required: true},
-  googleId: { type: String, required: true, unique: true},
-  accessToken: { type: String, required: true },
+  googleId: { type: String, unique: true},
+  accessToken: { type: String },
   calendars: { type: [String] }
 })
 

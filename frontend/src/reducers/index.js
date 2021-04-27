@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 
-import week from './week'
+import calendar from './calendar'
 
 export default combineReducers({
-  week
+  calendar
 })
 

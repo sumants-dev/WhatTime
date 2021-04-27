@@ -1,6 +1,9 @@
 import React from 'react'
 import CalendarAppointment from './CalendarAppointment'
 import CalendarAvalibility from './CalendarAvalibility'
+import Login from './Login'
+import HomeDashboard from './HomeDashboard'
+import CreateCalendar from './CreateCalendar'
 
 import {
   BrowserRouter as Router,
@@ -17,12 +20,21 @@ const App = () => {
     <>
     <Router>
       <Switch>
-        <Route exact path = '/'>
+        <Route path = '/login'>
+          <Login/>
+        </Route>
+        <Route path = '/calendar'>
           <CalendarAppointment/>
         </Route>
         <Route path = '/avalibility'>
-          <CalendarAvalibility />
+          <CalendarAvalibility/>
         </Route>  
+        <Route exact path = '/'>
+          <HomeDashboard/>        
+        </Route>
+        <Route path = '/new'>
+          <CreateCalendar/>
+        </Route>
       </Switch>
     </Router>
     </>

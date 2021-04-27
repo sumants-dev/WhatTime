@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import axios from 'axios'
 
-const AppointmentButton = ({time, day, hour, calendar}) => {
+const AppointmentButton = ({time, day, hour}) => {
 
   const changed_time = moment(time).add(day, 'd').hour(hour)
   const changed_time_format = changed_time.format()
@@ -10,7 +10,8 @@ const AppointmentButton = ({time, day, hour, calendar}) => {
   // https://github.com/facebook/react/issues/14326
   useEffect(() => {
     async function fetch() {
-      const { data } = await axios.post('/user/avalibility', {calendar})
+      const { data } = await axios.get('/user/avalibility')
+      console.log(data)
       const { times } = data[0]
       setIsClick(times.includes(changed_time_format))
     }
@@ -21,14 +22,14 @@ const AppointmentButton = ({time, day, hour, calendar}) => {
 
   const addAvalibility = () => {
     axios.post('/user/avalibility/add', 
-      {calendar: calendar, time: changed_time_format }
+      {time: changed_time_format }
     ).then(setIsClick(!isClick))
     .catch((e) => {console.log(e)})
   }
 
   const removeAvalibility = () => {
     axios.post('/user/avalibility/delete',
-      {calendar: calendar, time: changed_time_format}
+      {time: changed_time_format}
     ).then(setIsClick(!isClick))
   }
 

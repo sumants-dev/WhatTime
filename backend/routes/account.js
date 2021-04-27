@@ -6,7 +6,6 @@ const router = express.Router()
 
 
 router.post('/login', passport.authenticate('local'),  async (req, res) => {
-	console.log(req.user)
   res.send('User logged in')
 })
 
