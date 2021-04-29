@@ -15,7 +15,7 @@ const AvalibilityStaticButton = ({time, day, hour, isOwner}) => {
     const intervalID = setInterval(async () => {
       const { data } = await axios.get('calendar/avalibility')
       setIsClick(data.includes(changed_time_format))
-    }, 3500)
+    }, 3000)
     return () => clearInterval(intervalID)
   }, [])
 

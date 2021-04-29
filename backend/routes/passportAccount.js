@@ -7,13 +7,10 @@ const express = require('express')
 
 const router = express.Router()
 
-
 router.get('/auth/google', 
-passport.authenticate('google', {
-  scope: ['profile', 'email','https://www.googleapis.com/auth/calendar', 
-  'https://www.googleapis.com/auth/calendar.events']
-})
-
+  passport.authenticate('google', {
+    scope: ['profile', 'email', 'https://www.googleapis.com/auth/calendar']
+  })
 )
 
 router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {

@@ -17,7 +17,7 @@ const isAuthenticated = require('./middleware/isUserAuthenticated')
 const calendarRouter = require('./routes/calendar')
 const passportAccountRouter = require('./routes/passportAccount')
 const userRouter = require('./routes/user')
-
+const googleRouter = require('./routes/google')
 // Initialization variables
 const MONGO_URI = 'mongodb://localhost:27017/when2meet'
 const port = process.env.PORT || 3000
@@ -40,28 +40,26 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 // callbackURL: '/auth/google/redirect'
+const options = { upsert: true, new: true, setDefaultsOnInsert: true }
+
 passport.use(
   new GoogleStrategy({
       clientID: keys.google.clientID,
       clientSecret: keys.google.clientSecret,
       callbackURL: '/auth/google/redirect'
   }, (accessToken, refreshToken, profile, done) => {
-      User.findOne({googleId: profile.id}).then((currentUser) => {
-        if(currentUser){
-          done(null, currentUser);
-        } else{
 
-          const options = { upsert: true, new: true, setDefaultsOnInsert: true }
+    User.findOneAndUpdate(
+      {username: profile._json.email}, {username: profile._json.email, googleId: profile.id, 
+      accessToken: accessToken, 
+      refreshToken: refreshToken},
+      options).then((username) => {
+      done(null, username)
 
-          User.findOneAndUpdate(
-            {username: profile._json.email}, {username: profile._json.email, googleId: profile.id, accessToken: accessToken },
-            options).then((username) => {
-            done(null, username)
-          })
-        } 
       })
     })
 )
+
 
 passport.serializeUser((user, done) => {
   done(null, user.id)
@@ -81,6 +79,7 @@ app.use(express.json())
 // ROUTER
 app.use('/calendar', calendarRouter)
 app.use('/user', userRouter)
+app.use('/google', googleRouter)
 app.use('/', passportAccountRouter)
 
 // INTEGRATION

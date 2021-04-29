@@ -4,6 +4,7 @@ import CalendarAvalibility from './CalendarAvalibility'
 import Login from './Login'
 import HomeDashboard from './HomeDashboard'
 import CreateCalendar from './CreateCalendar'
+import CalendarInfo from './CalendarInfo'
 
 import {
   BrowserRouter as Router,
@@ -34,6 +35,9 @@ const App = () => {
         </Route>
         <Route path = '/new'>
           <CreateCalendar/>
+        </Route>
+        <Route path = '/info'>
+          <CalendarInfo/>
         </Route>
       </Switch>
     </Router>

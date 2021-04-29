@@ -25,6 +25,7 @@ const HomeDashboard = () => {
     await axios.post('user/activeCalendar', {calendar})
     history.push('/calendar')
   }
+
   const generatePanelBlock = (calendar) => {
     console.log(calendar)
     return (

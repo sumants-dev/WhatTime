@@ -25,7 +25,8 @@ const CalendarAppointment = () => {
       <div className ="tabs is-medium">
         <ul>
           <li className = 'is-active'><a href='/calendar'>My Avalibility</a></li>
-          <li><a href='/avalibility'>Group's Avalibility</a></li>
+          <li><a href='/avalibility'>Group Avalibility</a></li>
+          <li><a href='/info'> Group Info </a> </li>
         </ul>
       </div>
     </>

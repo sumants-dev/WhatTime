@@ -5,7 +5,8 @@ const userSchema = new Schema({
   username:  { type: String, required: true},
   googleId: { type: String, unique: true},
   accessToken: { type: String },
-  calendars: { type: [String] }
+  refreshToken: {type: String},
+  calendars: { type: [String] },
 })
 
 module.exports = model('User', userSchema, 'User')

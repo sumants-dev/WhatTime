@@ -15,7 +15,7 @@ const CalendarAvalibility = () => {
       const ownerData  = await axios.get('/calendar/owner')
       const { data } = await axios.get('/user/activeCalendar')
       const { calendar } = data
-
+      console.log(ownerData)
       setIsOwner(ownerData.data)
       setCalendar(calendar)
     }
@@ -28,12 +28,13 @@ const CalendarAvalibility = () => {
   
   const tabs = (
     <>
-      <div className="tabs is-medium">
+      <div className ="tabs is-medium">
         <ul>
           <li><a href='/calendar'>My Avalibility</a></li>
-          <li className="is-active" ><a href='/avalibility'>Group's Avalibility</a></li>
+          <li className = 'is-active'><a href='/avalibility'>Group Avalibility</a></li>
+          <li><a href='/info'> Group Info </a> </li>
         </ul>
-      </div>      
+      </div>
     </>)
 
   if(calendar !== '') {

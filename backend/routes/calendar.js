@@ -11,7 +11,9 @@ router.post('/create', async (req, res, next) => {
     let { calendar, invitedUsers } = req.body
     const owner = req.user.username
     invitedUsers = invitedUsers.replace(' ', '')
+    invitedUsers = invitedUsers.trim()
     invitedUsers = invitedUsers.split(';')
+    
     invitedUsers.push(owner)
 
     const users = invitedUsers
@@ -58,6 +60,25 @@ router.get('/users', async (req, res, next) => {
   }
 })
 
+router.get('/usersWithNoAvalibility', async (req, res, next) => {
+  try {
+    const calendar = req.session.activeCalendar
+    const { users } = await Calendar.findOne({ calendar })
+    const notAvailableUsers = [] 
+
+    for (let index = 0; index < users.length; index++) {
+      const user = users[index]
+      const avail = await Avalibility.find({ calendar, user })
+      
+      if (avail.length === 0) {
+        notAvailableUsers.push(user)
+      }
+    }
+    res.send(notAvailableUsers)
+  } catch (error) {
+    res.send('Not OK')
+  }
+})
 router.post('/invitedUsers', async (req, res, next) => {
   try {
     const { calendar } = req.body
@@ -74,7 +95,8 @@ router.get('/owner', async (req, res, next) => {
   try {
     const activeCalendar = req.session.activeCalendar
     const currentUser = req.user.username
-    const { owner } = await Calendar.find({ calendar: activeCalendar })
+    const { owner } = await Calendar.findOne({ calendar: activeCalendar })
+    console.log(owner)
     if (owner !== null) {
       res.send(currentUser === owner)
     } else {
