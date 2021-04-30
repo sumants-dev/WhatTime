@@ -9,23 +9,24 @@ const CalendarAvalibility = () => {
   const time = moment().startOf('day')
   const [isOwner, setIsOwner] = useState(false)
   const [calendar, setCalendar] = useState('')
+  const [finalTime, setFinalTime] = useState('')
 
   useEffect(() => {
     async function fetch() {
       const ownerData  = await axios.get('/calendar/owner')
       const { data } = await axios.get('/user/activeCalendar')
       const { calendar } = data
-      console.log(ownerData)
+      const finalData = await axios.get('/calendar/finalTime')
+
       setIsOwner(ownerData.data)
       setCalendar(calendar)
+      setFinalTime(finalData.data)
     }
-
     fetch()
   }, [])
 
-  console.log(isOwner)
-  console.log(calendar)
-  
+
+  console.log(finalTime)
   const tabs = (
     <>
       <div className ="tabs is-medium">
@@ -37,7 +38,7 @@ const CalendarAvalibility = () => {
       </div>
     </>)
 
-  if(calendar !== '') {
+  if (calendar !== '' && (finalTime === undefined || finalTime === '')) {
     return (
       <>
         <Navbar/>
@@ -49,6 +50,31 @@ const CalendarAvalibility = () => {
           <WeeklyAvalibility time = {time} day = {day + 3} isOwner = {isOwner} />
           <WeeklyAvalibility time = {time} day = {day + 4} isOwner = {isOwner} />
         </div>
+      </>
+    )
+  } else if (calendar !== '' && finalTime !== '') {
+    return (
+      <>
+        <Navbar/>
+        {tabs}
+        <section>
+          <div className = 'columns'>
+            <div className = 'column'></div>
+            <div className = 'column'>
+              <div class="card">
+                  <header className='card-header'>
+                    <p className='card-header-title'> Event Time for {calendar}</p>
+                  </header>
+                  <div class="card-content">
+                    <div class="content">
+                      <p> The event has been set for the time at {moment(finalTime).format('LLLL')}. An event has been created in your google calendar. </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div className = 'column'></div>
+          </div>
+        </section>
       </>
     )
   } else {

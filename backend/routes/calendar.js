@@ -16,7 +16,7 @@ router.post('/create', async (req, res, next) => {
     
     invitedUsers.push(owner)
 
-    const users = invitedUsers
+    const users = _.uniq(invitedUsers, false)
     const query = await Calendar.find({ calendar })
     if (query.length === 0) {
       await Calendar.create({ calendar, users, owner })
@@ -31,19 +31,40 @@ router.post('/create', async (req, res, next) => {
         }
       })
     }
-    res.send("OK")
+    res.send('OK')
   } catch (error) {
-    res.send("Not OK")
+    res.send('Not OK')
+  }
+})
+
+
+router.get('/times', async (req, res, next) => {
+  try {
+    const calendar = req.session.activeCalendar
+    const query = await Calendar.findOne({ calendar })
+    const { users } = query
+    let times = []
+
+    for (let index = 0; index < users.length; index++) {
+      const user = users[index]
+      const userAvalibility = await Avalibility.findOne({ user, calendar })
+      const userTimes = userAvalibility.times
+      times.push(...userTimes)
+    }
+
+    res.send(times)
+
+  } catch (error) {
+    res.send('Not OK')
   }
 })
 
 router.get('/avalibility', async (req, res, next) => {
   try {
     const calendar = req.session.activeCalendar
-    let avalibilities = await Calendar.find( { calendar })
-    avalibilities = avalibilities[0].calendarAvalibility
+    let currCalendar = await Calendar.findOne( { calendar })
+    const avalibilities = currCalendar.calendarAvalibility
     res.send(avalibilities)
-
   } catch (error) {
     res.send('Not OK')
   }
@@ -96,7 +117,6 @@ router.get('/owner', async (req, res, next) => {
     const activeCalendar = req.session.activeCalendar
     const currentUser = req.user.username
     const { owner } = await Calendar.findOne({ calendar: activeCalendar })
-    console.log(owner)
     if (owner !== null) {
       res.send(currentUser === owner)
     } else {
@@ -104,6 +124,18 @@ router.get('/owner', async (req, res, next) => {
     }
   } catch (error) {
     res.send('Not OK')    
+  }
+})
+
+router.get('/finalTime', async (req, res, next) => {
+  try {
+    const activeCalendar = req.session.activeCalendar
+    const { finalTime } = await Calendar.findOne({ calendar: activeCalendar })
+    console.log(finalTime)
+    res.send(finalTime)
+  } catch(error) {
+    console.log(error)
+    res.send('Not Ok')
   }
 })
 module.exports = router

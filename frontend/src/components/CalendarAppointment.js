@@ -12,7 +12,6 @@ const CalendarAppointment = () => {
   useEffect(() => {
     async function fetch() {
       const { data } = await axios.get('/user/activeCalendar')
-      console.log(data)
       const { calendar } = data
       setCalendar(calendar)
     }

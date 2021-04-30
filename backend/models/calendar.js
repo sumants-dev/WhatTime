@@ -5,7 +5,9 @@ const CalendarSchema = new Schema({
   calendar: {type: String, required: true, unique: true},
   users: {type: [String], required: true},
   owner: {type: String, required: true},
-  calendarAvalibility: {type: [String], required: false}
+  calendarAvalibility: {type: [String], required: false},
+  finalTime: {type: String, required: false}
+  
 })
 
 module.exports = model('Calendar', CalendarSchema, 'Calendar')
