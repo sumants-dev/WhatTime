@@ -6,7 +6,7 @@ What time is a tool to organize events among google account users. Users can inv
 ## Technologies
 **Frontend:** ReactJs, Bulma
 
-**Backend:** ExpressJs/NodeJs, PassportJs, GoogleAPI, Moongoose
+**Backend:** ExpressJs/NodeJs, PassportJs, GoogleAPI, Mongoose
 
 **Database:** MongoDB
 ## Demo
