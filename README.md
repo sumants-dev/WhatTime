@@ -1,7 +1,7 @@
 # What Time?
 ## Project Description
 
-What time is a tool to organize events among google account users.
+What time is a tool to organize events among google account users. Users can invite other google users through their email, and setting an event will send an invite to their google calendars.
 
 ## Technologies
 **Frontend:** ReactJs, Bulma
